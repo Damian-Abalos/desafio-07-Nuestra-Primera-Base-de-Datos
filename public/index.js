@@ -24,7 +24,7 @@ socket.on('productoDesdeElServidor', prod => {
     console.log(prod);
     const productosHTML = prod
         .map(prod => `
-        <tr class="warning">
+        <tr class="d-block">
             <td>${prod.nombre}</td>             
             <td>${prod.precio}</td>             
             <td style="width: 33%"><img style="max-width: 50px;" src="${prod.imagen}" alt=""></td>             
@@ -34,7 +34,7 @@ socket.on('productoDesdeElServidor', prod => {
 
 socket.on('mensajeDesdeElServidor', msjs => {
     const mensajesHTML = msjs
-        .map(msj => `<div class="d-flex"><p style="color: blue;">${msj.mensaje.author}</p><p style="color: brown;">[${time}]</p>:<p style="color: green;">${msj.mensaje.text}</p></div>`)
+        .map(msj => `<div class="d-flex"><p style="color: blue;">${msj.author}</p><p style="color: brown;">[${time}]</p>:<p style="color: green;">${msj.text}</p></div>`)
         .join('')
     document.getElementById('mi-p').innerHTML = mensajesHTML
 })

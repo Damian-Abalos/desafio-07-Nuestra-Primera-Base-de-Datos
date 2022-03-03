@@ -34,12 +34,12 @@ class DataBase {
 
     createTable() {
         this.knex.schema.createTable(this.tableName, table => {
-            // table.increments('id').primary()
-            table.string('nombre').notNullable()
-            // table.string('codigo').notNullable()
-            table.float('precio')
-            // table.integer('stock')
-            table.string('imagen').notNullable()
+            table.string('author')
+            table.string('text')
+
+            // table.string('nombre').notNullable()
+            // table.float('precio')
+            // table.string('imagen').notNullable()
         })
             .then(() => console.log("table created"))
             .catch((err) => { console.log(err); throw err })
@@ -48,50 +48,49 @@ class DataBase {
             })
     }
 
-    insertData(data) {
-        this.knex(this.tableName)
-            .insert(data)
-            .then(() => console.log("data inserted:" + data.nombre))
-            .catch((err) => { console.log(err); throw err })
-            .finally(() => { this.knex.destroy(); });
+    async insertData(data) {
+        try {
+            const [id] = await this.knex(this.tableName).insert(data);
+            return id;
+        } catch (error) {
+            console.log(error); throw error;
+        }
     }
 
-    selectData() {
-        return new Promise((resolve, reject) => {
-            this.knex.from(this.tableName).select('*')
-                .then((res) => { resolve(res) })
-                .catch((err) => { console.log(err); throw err })
-                .finally(() => { this.knex.destroy(); })
-        })
+    async selectData() {
+        try {
+            const rows = await this.knex.from(this.tableName).select('*');
+            return rows;
+        } catch (error) {
+            console.log('Error:', error);
+        }
     }
 
-    updateWhere(key, value) {
-        this.knex.from(this.tableName).where(key, value).update({ stock: 0 })
-            .then(console.log('data updated'))
-            .catch((err) => { console.log(err); throw err })
-            .finally(() => {
-                this.knex.destroy();
-            })
+    async updateWhere(whereKey, whereValue) {
+        try {
+            const dataUpdated = await this.knex.from(this.tableName).where(whereKey, whereValue).update({ stock: 0 })
+            return dataUpdated;
+        } catch (error) {
+            console.log('Error:', error);
+        }
     }
 
-    deleteData() {
-        this.knex.from(this.tableName).del()
-            .then(console.log('data deleted'))
-            .catch((err) => { console.log(err); throw err })
-            .finally(() => {
-                this.knex.destroy();
-            })
+    async deleteData() {
+        try {
+            await this.knex.from(this.tableName).del()
+            return ('data deleted')
+        } catch (error) {
+            console.log('Error:', error);
+        }
     }
 
-    deleteWhere(key, value) {
-        this.knex.from('articulos')
-            .where(key, value)
-            .del()
-            .then(console.log('data deleted'))
-            .catch((err) => { console.log(err); throw err })
-            .finally(() => {
-                this.knex.destroy();
-            })
+    async deleteWhere(key, value) {
+        try {
+            await this.knex.from(this.tableName).where(key, value).del()
+            return ('data deleted')
+        } catch (error) {
+            console.log('Error:', error);
+        }
     }
 }
 const articulos = [

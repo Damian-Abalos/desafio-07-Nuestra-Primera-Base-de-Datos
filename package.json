@@ -18,5 +18,13 @@
     "sqlite3": "^5.0.2"
   },
   "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Damian-Abalos/desafio-07-Nuestra-Primera-Base-de-Datos.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Damian-Abalos/desafio-07-Nuestra-Primera-Base-de-Datos/issues"
+  },
+  "homepage": "https://github.com/Damian-Abalos/desafio-07-Nuestra-Primera-Base-de-Datos#readme",
   "description": ""
 }
