@@ -17,9 +17,7 @@
     "socket.io": "^4.4.1",
     "sqlite3": "^5.0.2"
   },
-  "devDependencies": {
-    "@faker-js/faker": "^6.0.0"
-  },
+  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Damian-Abalos/desafio-07-Nuestra-Primera-Base-de-Datos.git"

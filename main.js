@@ -5,7 +5,7 @@ const { error } = require("console");
 const app = express();
 const httpServer = new HttpServer(app);
 const io = new IOServer(httpServer);
-const {faker} = require('@faker-js/faker')
+
 const DataBase = require('./DataBase.js');
 const productosMariaDB = new DataBase('productos', 'mysql');
 const mensajesSQLite3 = new DataBase('tablaMensajes', 'sqlite3');
@@ -17,34 +17,13 @@ app.use(express.urlencoded({ extended: true }));
 // no se en que parte del codigo deberia crear las tablas y que condicion usar para que: si ya hay una tabla creada con ese nombre, no haga nada
 // no termino de entender como hacer la promesas en estos casos
 
-app.get("/api/productos-test", (req,res)=>{
-    const data = generarData(10)
-    res.send(data)
-})
-
 app.get("/", (req, res) => {
     // productosMariaDB.createTable()
     // mensajesSQLite3.createTable()
     res.sendFile("/index.html", { root: __dirname });
 });
 
-function generarCombinacion() {
-    return{
-        nombre:faker.commerce.product(),
-        precio:faker.commerce.price(),
-        imagen:faker.image.imageUrl()
-    }
-}
-
-function generarData(cantidad) {
-    const productos = []
-    for (let i = 0; i < cantidad; i++) {
-        productos.push(generarCombinacion())
-    }
-    return productos
-}
-
-
+// const listaProductos = productosMariaDB.selectData();
 
 const getProducts = async () => {
     return await productosMariaDB.selectData();
@@ -70,7 +49,7 @@ io.on("connection", async (socket) => {
     // mensajesSQLite3.createTable()
     const mensajes = await getMessages()
     socket.emit("mensajeDesdeElServidor", mensajes)
-    const listaProductos = await generarData(5)
+    const listaProductos = await getProducts()
     socket.emit("productoDesdeElServidor", listaProductos) //nombre del evento + data
 
     socket.on("mensajeDesdeElCliente", async (data) => {
@@ -80,7 +59,7 @@ io.on("connection", async (socket) => {
     });
     socket.on("productoDesdeElCliente", async (data) => {
         await saveProduct(data)
-        const listaProductos = await generarData(5)
+        const listaProductos = await getProducts()
         io.sockets.emit("productoDesdeElServidor", listaProductos);
     });
 });

@@ -24,12 +24,11 @@ socket.on('productoDesdeElServidor', prod => {
     console.log(prod);
     const productosHTML = prod
         .map(prod => `
-        <tr class="table table-dark w-100">
-            <td class="col-4">${prod.nombre}</td>             
-            <td class="col-4">$${prod.precio}</td>             
-            <td class="col-4"><img style="max-width: 50px;" src="${prod.imagen}" alt=""></td>             
+        <tr class="d-block">
+            <td>${prod.nombre}</td>             
+            <td>${prod.precio}</td>             
+            <td style="width: 33%"><img style="max-width: 50px;" src="${prod.imagen}" alt=""></td>             
         </tr>`)
-        .join('')
     document.getElementById('mi-tr').innerHTML = productosHTML
 })
 
