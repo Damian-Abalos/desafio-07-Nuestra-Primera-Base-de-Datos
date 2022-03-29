@@ -1,112 +1,61 @@
+const admin = require("firebase-admin");
+const serviceAccount = require("./DB/basefirebase-a035b-firebase-adminsdk-8uw8n-2507f5c523.json");
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
+
+
 class DataBase {
 
-    constructor(tabla, client) {
-        this.tableName = tabla
+    constructor(collection) {
+        this.collection = collection
+    }
 
-        this.client = client
+    async getMessages() {
+        try {
+            const db = admin.firestore();
+            const query = db.collection(this.collection);
+            const querySnapshot = await query.get()
+            let docs = querySnapshot.docs;
 
-        this.options = {}
-
-        if (this.client == 'mysql') {
-            this.options = {
-                client: this.client,
-                connection: {
-                    host: '127.0.0.1',
-                    user: 'root',
-                    password: '',
-                    database: 'ecommerce'
-                }
-            }
-        } else if (this.client == 'sqlite3') {
-            this.options = {
-                client: this.client,
-                connection: {
-                    filename: `${__dirname}/DB/mydb.sqlite`
+            const response = docs.map((doc) => ({
+                author: {
+                    id: doc.data().mail,
+                    nombre: doc.data().nombre,
+                    apellido: doc.data().apellido,
+                    edad: doc.data().edad,
+                    alias: doc.data().alias,
+                    avatar: doc.data().urlFoto
                 },
-                useNullAsDefault: true
-            }
-        } else {
-            this.options = {}
-        }
-
-        this.knex = require('knex')(this.options);
-    }
-
-    createTable() {
-        this.knex.schema.createTable(this.tableName, table => {
-            table.string('author')
-            table.string('text')
-
-            // table.string('nombre').notNullable()
-            // table.float('precio')
-            // table.string('imagen').notNullable()
-        })
-            .then(() => console.log("table created"))
-            .catch((err) => { console.log(err); throw err })
-            .finally(() => {
-                this.knex.destroy();
-            })
-    }
-
-    async insertData(data) {
-        try {
-            const [id] = await this.knex(this.tableName).insert(data);
-            return id;
+                text: doc.data().mensajeUsuario
+            }))
+            console.log(response);
+            return response
         } catch (error) {
-            console.log(error); throw error;
+            throw new Error(`Error al buscar: ${error}`)
         }
     }
 
-    async selectData() {
-        try {
-            const rows = await this.knex.from(this.tableName).select('*');
-            return rows;
-        } catch (error) {
-            console.log('Error:', error);
-        }
-    }
 
-    async updateWhere(whereKey, whereValue) {
-        try {
-            const dataUpdated = await this.knex.from(this.tableName).where(whereKey, whereValue).update({ stock: 0 })
-            return dataUpdated;
-        } catch (error) {
-            console.log('Error:', error);
-        }
-    }
 
-    async deleteData() {
-        try {
-            await this.knex.from(this.tableName).del()
-            return ('data deleted')
-        } catch (error) {
-            console.log('Error:', error);
-        }
-    }
+    saveMessages = async (mensaje) => {
+        const db = admin.firestore();
+        const query = db.collection(this.collection);
+        const data = await this.getAll()
+        let ultimoId;
+        let ultimomensaje = await data[data.length - 1];
 
-    async deleteWhere(key, value) {
-        try {
-            await this.knex.from(this.tableName).where(key, value).del()
-            return ('data deleted')
-        } catch (error) {
-            console.log('Error:', error);
-        }
-    }
+        if (data.length == 0) { ultimoId = 0 } else { ultimoId = ultimomensaje.id }
+
+        const nId = await ultimoId + 1
+        const time = Date(Date.now()).toString()
+        let doc = query.doc(`${nId}`)
+        await doc.create({ ...mensaje, timestamp: time, id: nId })
+        return 'mensaje enviado 🆗'   
+    };
+
 }
-const articulos = [
-    { nombre: "palta", codigo: 10, precio: 10.10, stock: 10 },
-    { nombre: "tomate", codigo: 20, precio: 20.20, stock: 20 },
-    { nombre: "cebolla", codigo: 30, precio: 30.30, stock: 30 },
-    { nombre: "limon", codigo: 40, precio: 40.40, stock: 40 },
-    { nombre: "cilantro", codigo: 50, precio: 50.50, stock: 50 }
-]
-// const test = new DataBase('articulos', 'mysql')
-// const test = new Desafio('articulos', 'sqlite3')
-// test.createTable()
-// test.insertData(articulos)
-// test.selectData() 
-// test.updateWhere('id', '2')
-// test.deleteWhere('id', '3')
-// test.selectData() 
+
 
 module.exports = DataBase

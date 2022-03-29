@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desafio 06</title>
+    <title>Desafio Mocks y Normalizr</title>
     <link rel="stylesheet" href="/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/normalizr@3.6.1/dist/normalizr.browser.min.js"></script>
 </head>
-<body class="bg-dark p-2">
-    <div class="container w-50 pb-3 mb-2 bg-light">
+<body class="bg-light p-2">
+    <!-- <div class="container w-50 pb-3 mb-2 bg-light">
         <h2 class="text-center">Ingrese producto</h2>
         <form onsubmit="return addProduct(this)" style="text-align: center;">
             <div class="card border-primary m-3 p-3">
@@ -29,7 +30,7 @@
                 <button class="m-auto" type="submit" value="send">Cargar</button>
             </div>            
         </form>
-    </div>
+    </div> -->
     <div class="container w-50 pb-3 mb-2 bg-light">
         <h2 class="danger text-center">Lista productos</h2>
         <div class="table-responsive">
@@ -39,21 +40,53 @@
                     <th>Precio</th>
                     <th>Imagen</th>
                 </tr>
-                <tr class="table table-dark" id="mi-tr"></tr>
+                <div id="misProductos"></div>
             </table>
         </div>
     </div>
-    <div class="container w-50 bg-light">
-        <h2 class="danger">Lista de mensajes</h2>
-        <form onsubmit="return addMessage(this)">
-            <input type="email" id="username" placeholder="Tu email" >
-            <input type="text" id="texto" placeholder="Mensaje">
-            <input type="submit" value="Enviar">
-        </form>
-        <div id="mi-p"></div>
-    </div>
-     
+    <form id="Chat" onsubmit="SendMesage(); return false;" class="border border-primary p-3 mb-3 rounded jumbotron">
+        <h2 style="color: blue;">Chat</h2>
+        <h3>Autor</h3>
+        <div class="mb-3 col-5">
+            <input type="email" id="mail" name="mail" class="form-control" placeholder="Tu email" />
+        </div>
+        <div class="mb-3 col-5">
+            <input type="text" id="nombre" name="nombre" class="form-control" placeholder="nombre" />
+        </div>
+        <div class="mb-3 col-5">
+            <input type="text" id="apellido" name="apellido" class="form-control" placeholder="apellido" />
+        </div>
+        <div class="mb-3 col-2">
+            <input type="text" id="edad" name="edad" class="form-control" placeholder="edad" />
+        </div>
+
+        <div class="mb-3 col-4">
+            <input type="text" id="alias" name="alias" class="form-control" placeholder="alias" />
+        </div>
+        <div class="mb-3 col-5">
+            <input type="text" id="avatar" name="avatar" class="form-control" placeholder="avatar" />
+        </div>
+
+        <h3>Conversacion:</h3>
+        <div class="mb-3">
+            <div id="tableMessages"></div>
+        </div>
+
+        <h3>Mensaje:</h3>
+        <div class="row g-3 mb-3">
+            <div class="col-10">
+                <input type="text" id="mensaje" name="mensaje" class="form-control" />
+            </div>
+            <div class="col-2">
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
+        </div>
+        <div class="mb-3">
+
+        </div>
+    </form>     
 
     <script src="/index.js"></script>
+    
 </body>
 </html>

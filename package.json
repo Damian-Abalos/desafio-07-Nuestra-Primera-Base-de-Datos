@@ -1,5 +1,5 @@
 {
-  "name": "desafio-07-nuestra-primera-base-de-datos",
+  "name": "desafio-09-Mocks-y-Normalizacion",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -10,21 +10,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^6.1.1",
     "express": "^4.17.3",
+    "firebase-admin": "^10.0.2",
     "knex": "^0.95.15",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.15",
+    "normalizr": "^3.6.2",
     "socket.io": "^4.4.1",
     "sqlite3": "^5.0.2"
-  },
-  "devDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Damian-Abalos/desafio-07-Nuestra-Primera-Base-de-Datos.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Damian-Abalos/desafio-07-Nuestra-Primera-Base-de-Datos/issues"
-  },
-  "homepage": "https://github.com/Damian-Abalos/desafio-07-Nuestra-Primera-Base-de-Datos#readme",
-  "description": ""
+  }
 }
