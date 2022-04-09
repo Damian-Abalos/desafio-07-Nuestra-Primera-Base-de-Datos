@@ -11,40 +11,38 @@
     <script src="https://cdn.jsdelivr.net/npm/normalizr@3.6.1/dist/normalizr.browser.min.js"></script>
 </head>
 <body class="bg-light p-2">
-    <!-- <div class="container w-50 pb-3 mb-2 bg-light">
+    <div class="container w-50 pb-3 mb-2 bg-light">
         <h2 class="text-center">Ingrese producto</h2>
         <form onsubmit="return addProduct(this)" style="text-align: center;">
             <div class="card border-primary m-3 p-3">
                 <div style="margin-bottom:1em;">
                     <label style="display: block;">Ingresar nombre</label>
-                    <input style="display: block; margin: auto;" name="title" type="text" id="nombre">
+                    <input style="display: block; margin: auto;" name="title" type="text" id="nombre-producto">
                 </div>
                 <div style="margin-bottom:1em;">
                     <label style="display: block;">Ingresar precio</label>
-                    <input style="display: block; margin: auto;" name="price" type="number" id="precio">
+                    <input style="display: block; margin: auto;" name="price" type="number" id="precio-producto">
                 </div>
                 <div style="margin-bottom:1em;">
                     <label style="display: block;">Ingresar url imagen</label>
-                    <input style="display: block; margin: auto;" name="thumbnail" type="text" id="imagen">
+                    <input style="display: block; margin: auto;" name="thumbnail" type="text" id="imagen-producto">
                 </div>
                 <button class="m-auto" type="submit" value="send">Cargar</button>
             </div>            
         </form>
-    </div> -->
+    </div>
     <div class="container w-50 pb-3 mb-2 bg-light">
         <h2 class="danger text-center">Lista productos</h2>
-        <div class="table-responsive">
-            <table class="table table-dark mb-0">
-                <tr class="warning">
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th>Imagen</th>
-                </tr>
-                <div id="misProductos"></div>
-            </table>
+        <div">
+                <div class="row w-100 text-center bg-dark text-light m-0"">
+                    <p class="col-4">Nombre</p>
+                    <p class="col-4">Precio</p>
+                    <p class="col-4">Imagen</p>
+                </div>
+            <div id="misProductos" class="w-100 bg-dark"></div>
         </div>
     </div>
-    <form id="Chat" onsubmit="SendMesage(); return false;" class="border border-primary p-3 mb-3 rounded jumbotron">
+    <form id="Chat" onsubmit="return SendMesage();" class="border border-primary p-3 mb-3 rounded jumbotron">
         <h2 style="color: blue;">Chat</h2>
         <h3>Autor</h3>
         <div class="mb-3 col-5">

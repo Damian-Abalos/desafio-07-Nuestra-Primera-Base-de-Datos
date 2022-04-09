@@ -11,28 +11,23 @@ const schemaAuthor = new schema.Entity('author', {}, {
 // Mensaje
 const schemaMensaje = new schema.Entity('mensaje', {
     author: schemaAuthor
-}, {
-    idAttribute: 'id'
 })
 // Mensajes
 const schemaMensajes = new schema.Entity('mensajes', {
     mensajes: [schemaMensaje]
-}, {
-    idAttribute: 'id'
 })
 
-// function addProduct(e) {
-//     const producto = {
-//         nombre: document.getElementById('nombre').value,
-//         precio: document.getElementById('precio').value,
-//         imagen: document.getElementById('imagen').value
-//     };
-//     socket.emit('productoDesdeElCliente', producto);
-//     return false;
-// }
+function addProduct(e) {
+    const producto = {
+        nombre: document.getElementById('nombre').value,
+        precio: document.getElementById('precio').value,
+        imagen: document.getElementById('imagen').value
+    };
+    socket.emit('productoDesdeElCliente', producto);
+    return false;
+}
 
 function SendMesage() {
-
     if (document.getElementById('mail').value == "" ||
         document.getElementById('nombre').value == "" ||
         document.getElementById('apellido').value == "" ||
@@ -46,7 +41,7 @@ function SendMesage() {
     const time = Date(Date.now()).toString()
     const mensaje = {
         author: {
-            mail: document.getElementById('mail').value,
+            id: document.getElementById('mail').value,
             nombre: document.getElementById('nombre').value,
             apellido: document.getElementById('apellido').value,
             edad: document.getElementById('edad').value,
@@ -56,18 +51,39 @@ function SendMesage() {
         text: document.getElementById('mensaje').value,
         date: time,
     }
+    // console.log(mensaje);
     socket.emit('mensajeDesdeElCliente', mensaje);
     document.getElementById('mensaje').value = "";
     return false;
 }
 
 socket.on('mensajeDesdeElServidor', messages => {
+    console.log(messages);
+    // const denormalizedData = messages.entities
     const denormalizedData = denormalize(messages.result, schemaMensajes, messages.entities)
-    const newMessages = denormalizedData.messages
-    const mensajesHTML = newMessages
-        .map(newMessages => `
+    console.log(denormalizedData);
+
+
+    const ultimoIndiceDeMensaje = denormalizedData.messages.length
+    const ultimoMensajeNormalizado = denormalizedData.messages[ultimoIndiceDeMensaje -1]
+
+    // for (const messages of denormalizedData.messages) {
+    //     console.log(messages);
+    //     document.getElementById('tableMessages').innerHTML = `
+    //     <div class="d-flex">
+    //         <p style="color: blue;">${messages.author.nombre}</p>
+    //         <p style="color: brown;">[${messages.date}]:</p>            
+    //         <p style="color: green;">${messages.text}</p>
+    //     </div>`
+        
+
+
+
+    const mensajes = []
+    mensajes.push(ultimoMensajeNormalizado)
+    const mensajesHTML = mensajes.map(newMessages => `
         <div class="d-flex">
-            <p style="color: blue;">${newMessages.author.mail}</p>
+            <p style="color: blue;">${newMessages.author.nombre}</p>
             <p style="color: brown;">[${time}]:</p>            
             <p style="color: green;">${newMessages.text}</p>
         </div>
@@ -77,13 +93,12 @@ socket.on('mensajeDesdeElServidor', messages => {
 })
 
 socket.on('productoDesdeElServidor', listaProductos => {
-    console.log(`productos faker: ${listaProductos}`);
-    const productosHTML = listaProductos
-        .map(listaProductos => `
-        <div class="row w-80">
-            <div class="col-4">${listaProductos.nombre}</div>             
-            <div class="col-4">$${listaProductos.precio}</div>             
-            <div class="col-4"><img style="max-width: 50px;" src="${listaProductos.imagen}" alt=""></td>             
+    // console.log(`productos faker: ${listaProductos}`);
+    const productosHTML = listaProductos.map(listaProductos => `
+        <div class="row w-90 d-flex m-0">
+            <p class="col-4 text-light">${listaProductos.nombre}</p>             
+            <p class="col-4 text-center text-light">$${listaProductos.precio}</p>             
+            <div class="col-4 text-center"><img style="max-width: 50px;" src="${listaProductos.imagen}" alt=""></div>             
         </div>`)
         .join('')
     document.getElementById('misProductos').innerHTML = productosHTML

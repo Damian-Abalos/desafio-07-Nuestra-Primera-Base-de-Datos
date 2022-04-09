@@ -49,27 +49,13 @@ const productosFaker = generarData(5)
 const getMessages = async () => {
     return await mensajesFirebase.getMessages();
 };
-const saveMessage = async (message) => {
-    const idMessage = await mensajesFirebase.saveMessages(message);
-    return idMessage;
-}
+// const saveMessage = async (message) => {
+//     const idMessage = await mensajesFirebase.saveMessages(message);
+//     return idMessage;
+// }
 /*----------------------------------------------*/
 
-const schemaAuthor = new schema.Entity('author', {}, {
-	idAttribute: 'mail'
-})
-// Mensaje
-const schemaMensaje = new schema.Entity('mensaje', {
-	author: schemaAuthor
-}, {
-	idAttribute: 'id'
-})
-// Mensajes
-const schemaMensajes = new schema.Entity('mensajes', {
-	mensajes: [schemaMensaje]
-}, {
-	idAttribute: 'id'
-})
+
 
 
 /*-------------------------------------------*/
@@ -84,12 +70,13 @@ io.on("connection", async (socket) => {
     // console.log(listaProductos);
 
     const mensajes = await getMessages()
-	let messagesNormalizr = normalize(mensajes, schemaMensajes)
-	socket.emit('mensajeDesdeElServidor', messagesNormalizr)
+    // console.log(mensajes);
+	// let messagesNormalizr = normalize(mensajes, schemaMensajes)
+	socket.emit('mensajeDesdeElServidor', mensajes)
 
 
     socket.on("mensajeDesdeElCliente", async (data) => {
-        await saveMessage(data)
+        await mensajesFirebase.saveMessages(data)
         const mensajes = await getMessages()
         io.sockets.emit("mensajeDesdeElServidor", mensajes);
     });
